@@ -1,4 +1,0 @@
-vk_api
-requests
-beautifulsoup4
-feedparser
