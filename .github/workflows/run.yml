@@ -1,0 +1,33 @@
+name: TG to VK Bot
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 vk_api
+
+      - name: Run script
+        env:
+          VK_TOKEN: ${{ secrets.VK_TOKEN }}
+          GROUP_ID: ${{ secrets.GROUP_ID }}
+        run: python main.py
+
+      - name: Save processed state
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Auto-update processed posts cache"
+          file_pattern: processed.txt
